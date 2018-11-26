@@ -316,7 +316,14 @@ namespace SignalRChatClient
 
             if (inputArray[0].Equals("add", StringComparison.InvariantCultureIgnoreCase))
             {
-                AddNewNode(inputArray[2], inputArray[1]);
+                try
+                {
+                    AddNewNode(inputArray[2], inputArray[1]);
+                }
+                catch(Exception e)
+                {
+                    outputMessage += "Incorrect input.";
+                }
             }
             else if (inputArray[0].Equals("remove", StringComparison.InvariantCultureIgnoreCase))
             {

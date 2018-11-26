@@ -310,7 +310,7 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
 
 
 
-        public static string ChatInput(string inputString)
+        public string ChatInput(string inputString)
         {
             string outputMessage = "";
             string[] inputArray = new string[4];
@@ -322,7 +322,7 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
             }
 
             if (inputArray[0].Equals("add", StringComparison.InvariantCultureIgnoreCase))
-            {
+            { 
                 AddNewNode(inputArray[2], inputArray[1]);
             }
             else if (inputArray[0].Equals("remove", StringComparison.InvariantCultureIgnoreCase))
