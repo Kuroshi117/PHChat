@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -324,17 +324,14 @@ namespace SignalRChatClient
             if (inputArray[0].Equals("add", StringComparison.InvariantCultureIgnoreCase))
             {
                 AddNewNode(inputArray[2], inputArray[1]);
-                outputMessage = inputArray[1] + " added to " + inputArray[2]+".";
             }
             else if (inputArray[0].Equals("remove", StringComparison.InvariantCultureIgnoreCase))
             {
                 DeleteNode(inputArray[1]);
-                outputMessage = inputArray[1] + " has been removed.";
             }
             else if (inputArray[0].Equals("move", StringComparison.InvariantCultureIgnoreCase))
             {
                 MoveNode(inputArray[1], inputArray[2]);
-                outputMessage = inputArray[1] + " has been moved to " + inputArray[2] + ".";
             }
             else if (inputArray[0].Equals("get", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -405,12 +402,11 @@ namespace SignalRChatClient
             }
             else if (inputArray[0].Equals("read", StringComparison.InvariantCultureIgnoreCase))
             {
-                outputMessage=ReadNodes(Nodes);
+                ReadNodes(Nodes);
             }
-            else if (inputArray[0].Equals("path", StringComparison.InvariantCultureIgnoreCase))
+            else if (inputArray[0].Equals("write", StringComparison.InvariantCultureIgnoreCase))
             {
-                LoadText(inputArray[1], Text);
-                outputMessage = ReadNodes(Nodes);
+
             }
             else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -418,9 +414,7 @@ namespace SignalRChatClient
                 //Close tab
             }
             else
-            {
-                outputMessage = "Please enter valid command.";
-            }
+            { }
 
 
 

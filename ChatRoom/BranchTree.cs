@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -324,17 +324,14 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
             if (inputArray[0].Equals("add", StringComparison.InvariantCultureIgnoreCase))
             {
                 AddNewNode(inputArray[2], inputArray[1]);
-                outputMessage = inputArray[1] + " added to " + inputArray[2]+".";
             }
             else if (inputArray[0].Equals("remove", StringComparison.InvariantCultureIgnoreCase))
             {
                 DeleteNode(inputArray[1]);
-                outputMessage = inputArray[1] + " has been removed.";
             }
             else if (inputArray[0].Equals("move", StringComparison.InvariantCultureIgnoreCase))
             {
                 MoveNode(inputArray[1], inputArray[2]);
-                outputMessage = inputArray[1] + " has been moved to " + inputArray[2] + ".";
             }
             else if (inputArray[0].Equals("get", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -405,12 +402,11 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
             }
             else if (inputArray[0].Equals("read", StringComparison.InvariantCultureIgnoreCase))
             {
-                outputMessage=ReadNodes(Nodes);
+                ReadNodes(Nodes);
             }
-            else if (inputArray[0].Equals("path", StringComparison.InvariantCultureIgnoreCase))
+            else if (inputArray[0].Equals("write", StringComparison.InvariantCultureIgnoreCase))
             {
-                LoadText(inputArray[1], Text);
-                outputMessage = ReadNodes(Nodes);
+
             }
             else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -418,152 +414,14 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
                 //Close tab
             }
             else
-            {
-                outputMessage = "Please enter valid command.";
-            }
+            { }
 
 
 
             return outputMessage;
         }
-
-
-
-        /*
-        public static void Inputs()
-        {
-            string inputString = "";
-            string[] inputArray = new string[4];
-            char[] c = new char[] { ' ', ',' };
-            while (true)
-            {
-                Console.WriteLine("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nwrite fileName \nexit");
-                inputString = Console.ReadLine();
-                inputArray = inputString.Split(c, StringSplitOptions.RemoveEmptyEntries);
-                Console.WriteLine("\n");
-
-                if (inputArray.Length <= 1 && !inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Console.WriteLine("Nothing to operate. ");
-                    continue;
-                }
-
-                if (inputArray[0].Equals("add", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    AddNewNode(inputArray[2], inputArray[1]);
-                    ReadNodes(Nodes);
-                }
-                else if (inputArray[0].Equals("remove", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    DeleteNode(inputArray[1]);
-                    ReadNodes(Nodes);
-                }
-                else if (inputArray[0].Equals("move", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    MoveNode(inputArray[1], inputArray[2]);
-                    ReadNodes(Nodes);
-                }
-                else if (inputArray[0].Equals("get", StringComparison.InvariantCultureIgnoreCase))
-                {
-
-
-
-                    if (inputArray[1].Equals("leaves", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        List<Tree> tempTreeList = FindLeaves();
-                        if (tempTreeList.Any())
-                        {
-                            Console.WriteLine("Found: ");
-                            foreach (Tree t in tempTreeList)
-                            {
-                                Console.WriteLine(t.Content() + ", " + t.id());
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No leaves found.");
-                        }
-                    }
-                    else if (inputArray[1].Equals("internal", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        List<Tree> tempTreeList = FindInternalNodes();
-                        if (tempTreeList.Any())
-                        {
-                            Console.WriteLine("Found: ");
-                            foreach (Tree t in tempTreeList)
-                            {
-                                Console.WriteLine(t.Content() + ", " + t.id());
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("No internal nodes found.");
-                        }
-                    }
-                    else
-                    {
-                        if (FindNode(inputArray[1]) != null)
-                        {
-                            Tree tempTree = FindNode(inputArray[1]);
-                            Console.WriteLine("Found:\n" + tempTree.Content() + ", " + tempTree.id());
-
-                        }
-                        else if (FindNodebyContent(inputArray[1]) != null)
-                        {
-                            List<Tree> tempTreeList = FindNodebyContent(inputArray[1]);
-                            if (tempTreeList.Any())
-                            {
-                                Console.WriteLine("Found: ");
-                                foreach (Tree t in tempTreeList)
-                                {
-                                    Console.WriteLine(t.Content() + ", " + t.id());
-                                }
-                            }
-                            else
-                            {
-                                Console.WriteLine("Not found.");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine(inputArray[1] + " not found.");
-                        }
-                    }
-
-
-
-                }
-                else if (inputArray[0].Equals("write", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    WriteOutlineFile(Nodes, inputArray[1]);
-                    Console.WriteLine(inputArray[1] + ".txt was written.");
-                }
-                else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Console.WriteLine("Exiting program.");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Please enter valid input");
-                }
-
-            }
-        }
-
-        public static void ReadChildrenAlt(Tree node)
-        {
-            string tabs;
-            tabs = new string('\t', node.Depth);
-            Console.WriteLine(tabs + node.Content() + ", " + node.id());
-            if (node.Children != null)
-            {
-                foreach (Tree t in node.Children)
-                {
-                    ReadChildrenAlt(t);
-                }
-            }
-        }*/
+        
+      
     }
 
     public class Tree : INode
