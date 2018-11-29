@@ -21,19 +21,26 @@ namespace SignalRChatClient
 
         public static void LoadText(string path, List<string> text)
         {
-            string line;
-
-            using (StreamReader sr = new StreamReader(path))
+            try
             {
-                while ((line = sr.ReadLine()) != null)
+                string line;
+
+                using (StreamReader sr = new StreamReader(path))
                 {
-                    text.Add(line);
-                }
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        text.Add(line);
+                    }
 
+                }
+                if (Text != null)
+                {
+                    IsReady = true;
+                }
             }
-            if (Text != null)
+            catch
             {
-                IsReady = true;
+                IsReady = false;
             }
         }
         public static void SortBranchTree(List<string> text, List<Tree> nodes)
@@ -231,7 +238,7 @@ namespace SignalRChatClient
             for (int i = 0; i < nodes.Count; i++)
             {
                 tabs = new string('\t', nodes[i].Depth);
-                output+=(tabs + nodes[i].Content()+", "+nodes[i].id()+"\n");
+                output += (tabs + nodes[i].Content() + ", " + nodes[i].id() + "\n");
             }
             /*List<Tree> Roots = new List<Tree>();
             for (int i = 0; i < nodes.Count; i++)
@@ -320,7 +327,7 @@ namespace SignalRChatClient
                 {
                     AddNewNode(inputArray[2], inputArray[1]);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     outputMessage += "Incorrect input.";
                 }
@@ -414,15 +421,26 @@ namespace SignalRChatClient
             }
             else if (inputArray[0].Equals("path", StringComparison.InvariantCultureIgnoreCase))
             {
-                LoadText(inputArray[1], Text);
-                SortBranchTree(Text, Nodes);
-                outputMessage += "Done.";
+                try
+                {
+                    LoadText(inputArray[1], Text);
+                    if (IsReady == true)
+                    {
+                        SortBranchTree(Text, Nodes);
+                        outputMessage += "Done.";
+                    }
+                    else { outputMessage += "Invalid file path."; }
+                }
+                catch (InvalidCastException e)
+                {
+                    outputMessage += e.Message;
+                }
             }
 
             else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
 
-                Application.Current.Shutdown();                 
+
             }
             else
             {
