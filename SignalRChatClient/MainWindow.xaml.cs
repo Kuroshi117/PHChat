@@ -14,11 +14,11 @@ namespace SignalRChatClient
     public partial class MainWindow : Window
     {
         HubConnection connection;
-
+        #region Tree
         public static List<string> Text = new List<string>();
         public static List<Tree> Nodes = new List<Tree>();
         public static bool IsReady = false;
-
+        
         public static void LoadText(string path, List<string> text)
         {
             try
@@ -451,7 +451,7 @@ namespace SignalRChatClient
 
             return outputMessage;
         }
-
+        #endregion
 
 
         public MainWindow()
@@ -474,9 +474,10 @@ namespace SignalRChatClient
             };
             #endregion
         }
-
+        
         private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
+            
             #region snippet_ConnectionOn
             connection.On<string, string>("broadcastMessage", (user, message) =>
             {
@@ -499,6 +500,30 @@ namespace SignalRChatClient
             catch (Exception ex)
             {
                 messagesList.Items.Add(ex.Message);
+            }
+
+
+            int numUsers = 0;
+            try
+            {
+                numUsers = await connection.InvokeAsync<int>("NumberOfUsers");
+            }
+            catch (Exception ex)
+            {
+                messagesList.Items.Add(ex.Message);
+            }
+            if (numUsers > 0)
+            {
+                try
+                {
+
+                    Nodes = await connection.InvokeAsync<List<Tree>>("SendTree");
+                    messagesList.Items.Add("Tree successfully imported from Hub");
+                }
+                catch (Exception ex)
+                {
+                    messagesList.Items.Add(ex.Message);
+                }
             }
         }
 

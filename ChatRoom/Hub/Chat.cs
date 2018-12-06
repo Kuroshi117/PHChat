@@ -16,6 +16,7 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
     //The Chat class name becomes 
     public class Chat : Hub
     {
+        #region Tree
         public static List<string> Text = new List<string>();
         public static List<Tree> Nodes = new List<Tree>();
         public static bool IsReady = false;
@@ -452,8 +453,19 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
 
             return outputMessage;
         }
+        #endregion 
 
-
+        private static List<string> users = new List<string>();
+        public override Task OnConnectedAsync()
+        {
+            users.Add(Context.ConnectionId);
+            return base.OnConnectedAsync();
+        }
+        public override Task OnDisconnectedAsync(Exception exception)
+        {
+            users.Remove(Context.ConnectionId);
+            return base.OnDisconnectedAsync(exception);
+        }
 
         public void BroadcastMessage(string name, string message)
         {            
@@ -465,6 +477,17 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
         public void Echo(string name, string message)
         {
             Clients.Client(Context.ConnectionId).SendAsync("echo", name, message + " (echo from server)");
+        }
+
+        //First connection
+        public List<Tree> SendTree( )
+        {
+            return Nodes; 
+        }
+        public int NumberOfUsers()
+        {
+            int userCount = users.Count;
+            return userCount;
         }
     }
 }
