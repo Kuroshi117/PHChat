@@ -471,7 +471,7 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
         public void BroadcastMessage(string name, string message)
         {            
             Clients.All.SendAsync("broadcastMessage", name, message);
-            //Clients.All.SendAsync("broadcastMessage", name, ChatInput(message));
+            Clients.All.SendAsync("broadcastMessage", name, ChatInput(message));
         }
 
 
