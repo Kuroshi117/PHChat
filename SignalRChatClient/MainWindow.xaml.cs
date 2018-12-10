@@ -18,6 +18,7 @@ namespace SignalRChatClient
         public static List<string> Text = new List<string>();
         public static List<Tree> Nodes = new List<Tree>();
         public static bool IsReady = false;
+
         
         public static void LoadText(string path, List<string> text)
         {
@@ -463,8 +464,8 @@ namespace SignalRChatClient
                 //MAKE SURE NEXT LINE ENDS WITH THE URL AND HUB NAME THAT MATCHES
                 //OF YOUR PUBLISHED CHATROOM PROJECT.
                 
-                //.WithUrl("http://phalgorithmschat.azurewebsites.net/chat")
-                .WithUrl("http://localhost:5000/chat")
+                .WithUrl("http://phalgorithmschat.azurewebsites.net/chat")
+                //.WithUrl("http://localhost:5000/chat")
                 .Build();
 
             #region snippet_ClosedRestart
@@ -476,6 +477,68 @@ namespace SignalRChatClient
             #endregion
         }
         
+        private void ParseTreeCommand(string theCommand)
+        {
+            if (theCommand.StartsWith("AddNode"))
+            {
+                //invoke add node command here using string data
+
+
+                return;
+            }
+
+            if (theCommand.StartsWith("UpdateNode"))
+            {
+                //invoke add node command here using string data
+
+
+                return;
+            }
+
+            if (theCommand.StartsWith("DeleteNode"))
+            {
+                //invoke add node command here using string data
+
+
+                return;
+            }
+
+            if (theCommand.StartsWith("RemoveNode"))
+            {
+                //invoke add node command here using string data
+
+
+                return;
+            }
+
+            if (theCommand.StartsWith("SendTreeNodeCount"))
+            {
+                //This is a message sent by a new client. 
+
+                //We respond by sending a Message with our Tree Node Count 
+
+
+
+                return;
+            }
+
+            if (theCommand.StartsWith("HeresMyTreeNodeCount"))
+            {
+                //This is a message sent in response to a send tree node count
+
+                //add it to a list of clients and node counts or just use it for now
+                // by asking the sender to "send me your tree"
+
+
+                return;
+            }
+
+
+
+
+
+        }
+
         private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
             
@@ -487,6 +550,9 @@ namespace SignalRChatClient
                     var newMessage = $"{user}: {message}";
                     messagesList.Items.Add(newMessage);
                     messagesList.Items.Add(ChatInput(message));
+
+                    ParseTreeCommand(message);
+
                 });
             });
             #endregion
@@ -498,6 +564,8 @@ namespace SignalRChatClient
                 messagesList.Items.Add("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nread \npath fileNamePath \nexit");
                 connectButton.IsEnabled = false;
                 sendButton.IsEnabled = true;
+
+                //Send a message that says "WhatAreYourTreeDates
             }
             catch (Exception ex)
             {

@@ -568,10 +568,11 @@ namespace SignalRChatClient
         public int Depth;
         private static Random rand = new Random();
         private string identifier;
+        private static int counter=0;
         public Tree(string n)
         {
             Name = n;
-            identifier = GenerateID();
+            identifier = GenerateIDNumber();
         }
 
         public string id()
@@ -599,6 +600,10 @@ namespace SignalRChatClient
                 CharArray[i] = chars[rand.Next(chars.Length)];
             }
             return new string(CharArray);
+        }
+
+        private string GenerateIDNumber() {
+            return System.Threading.Interlocked.Increment(ref counter).ToString();
         }
     }
 
