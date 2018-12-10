@@ -457,13 +457,14 @@ namespace SignalRChatClient
         public MainWindow()
         {
             InitializeComponent();
-
+                //Instantiate tree?
             connection = new HubConnectionBuilder()
                 //WHEN DONE TESTING LOCALLY...
                 //MAKE SURE NEXT LINE ENDS WITH THE URL AND HUB NAME THAT MATCHES
                 //OF YOUR PUBLISHED CHATROOM PROJECT.
                 
-                .WithUrl("http://phalgorithmschat.azurewebsites.net/chat")
+                //.WithUrl("http://phalgorithmschat.azurewebsites.net/chat")
+                .WithUrl("http://localhost:5000/chat")
                 .Build();
 
             #region snippet_ClosedRestart
@@ -483,8 +484,9 @@ namespace SignalRChatClient
             {
                 this.Dispatcher.Invoke(() =>
                 {
-                   var newMessage = $"{user}: {message}";
-                   messagesList.Items.Add(newMessage);
+                    var newMessage = $"{user}: {message}";
+                    messagesList.Items.Add(newMessage);
+                    messagesList.Items.Add(ChatInput(message));
                 });
             });
             #endregion
@@ -503,28 +505,7 @@ namespace SignalRChatClient
             }
 
 
-            int numUsers = 0;
-            try
-            {
-                numUsers = await connection.InvokeAsync<int>("NumberOfUsers");
-            }
-            catch (Exception ex)
-            {
-                messagesList.Items.Add(ex.Message);
-            }
-            if (numUsers > 0)
-            {
-                try
-                {
-
-                    Nodes = await connection.InvokeAsync<List<Tree>>("SendTree");
-                    messagesList.Items.Add("Tree successfully imported from Hub");
-                }
-                catch (Exception ex)
-                {
-                    messagesList.Items.Add(ex.Message);
-                }
-            }
+        
         }
 
         private async void sendButton_Click(object sender, RoutedEventArgs e)
@@ -536,7 +517,7 @@ namespace SignalRChatClient
                 await connection.InvokeAsync("BroadcastMessage", 
                     userTextBox.Text, messageTextBox.Text);
                 #endregion
-                messagesList.Items.Add(ChatInput(messageTextBox.Text));
+              
             }
             catch (Exception ex)
             {                

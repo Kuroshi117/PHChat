@@ -459,6 +459,7 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
         public override Task OnConnectedAsync()
         {
             users.Add(Context.ConnectionId);
+            
             return base.OnConnectedAsync();
         }
         public override Task OnDisconnectedAsync(Exception exception)
@@ -470,24 +471,13 @@ namespace Microsoft.Azure.SignalR.Samples.ChatRoom
         public void BroadcastMessage(string name, string message)
         {            
             Clients.All.SendAsync("broadcastMessage", name, message);
-            Clients.All.SendAsync("broadcastMessage", name, ChatInput(message));
+            //Clients.All.SendAsync("broadcastMessage", name, ChatInput(message));
         }
 
 
         public void Echo(string name, string message)
         {
             Clients.Client(Context.ConnectionId).SendAsync("echo", name, message + " (echo from server)");
-        }
-
-        //First connection
-        public List<Tree> SendTree( )
-        {
-            return Nodes; 
-        }
-        public int NumberOfUsers()
-        {
-            int userCount = users.Count;
-            return userCount;
         }
     }
 }
