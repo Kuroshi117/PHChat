@@ -437,7 +437,6 @@ namespace SignalRChatClient
                     outputMessage += e.Message;
                 }
             }
-
             else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
 
@@ -447,9 +446,6 @@ namespace SignalRChatClient
             {
                 outputMessage = "Please enter valid command.";
             }
-
-
-
             return outputMessage;
         }
         #endregion
@@ -476,68 +472,6 @@ namespace SignalRChatClient
             };
             #endregion
         }
-        
-        private void ParseTreeCommand(string theCommand)
-        {
-            if (theCommand.StartsWith("AddNode"))
-            {
-                //invoke add node command here using string data
-
-
-                return;
-            }
-
-            if (theCommand.StartsWith("UpdateNode"))
-            {
-                //invoke add node command here using string data
-
-
-                return;
-            }
-
-            if (theCommand.StartsWith("DeleteNode"))
-            {
-                //invoke add node command here using string data
-
-
-                return;
-            }
-
-            if (theCommand.StartsWith("RemoveNode"))
-            {
-                //invoke add node command here using string data
-
-
-                return;
-            }
-
-            if (theCommand.StartsWith("SendTreeNodeCount"))
-            {
-                //This is a message sent by a new client. 
-
-                //We respond by sending a Message with our Tree Node Count 
-
-
-
-                return;
-            }
-
-            if (theCommand.StartsWith("HeresMyTreeNodeCount"))
-            {
-                //This is a message sent in response to a send tree node count
-
-                //add it to a list of clients and node counts or just use it for now
-                // by asking the sender to "send me your tree"
-
-
-                return;
-            }
-
-
-
-
-
-        }
 
         private async void connectButton_Click(object sender, RoutedEventArgs e)
         {
@@ -551,8 +485,6 @@ namespace SignalRChatClient
                     messagesList.Items.Add(newMessage);
                     messagesList.Items.Add(ChatInput(message));
 
-                    ParseTreeCommand(message);
-
                 });
             });
             #endregion
@@ -561,7 +493,7 @@ namespace SignalRChatClient
             {
                 await connection.StartAsync();
                 messagesList.Items.Add("Connection started");
-                messagesList.Items.Add("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nread \npath fileNamePath \nexit");
+                //messagesList.Items.Add("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nread \npath fileNamePath \nexit");
                 connectButton.IsEnabled = false;
                 sendButton.IsEnabled = true;
 
