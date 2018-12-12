@@ -572,7 +572,13 @@ namespace SignalRChatClient
         public Tree(string n)
         {
             Name = n;
-            identifier = GenerateIDNumber();
+            identifier = GenerateID();
+        }
+
+        public Tree(string n, string i)
+        {
+            Name = n;
+            identifier = i;
         }
 
         public string id()

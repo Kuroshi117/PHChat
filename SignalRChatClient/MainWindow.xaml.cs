@@ -18,7 +18,7 @@ namespace SignalRChatClient
         public static List<string> Text = new List<string>();
         public static List<Tree> Nodes = new List<Tree>();
         public static bool IsReady = false;
-
+        public static DateTime LastChange;
         
         public static void LoadText(string path, List<string> text)
         {
@@ -239,7 +239,7 @@ namespace SignalRChatClient
             for (int i = 0; i < nodes.Count; i++)
             {
                 tabs = new string('\t', nodes[i].Depth);
-                output += (tabs + nodes[i].Content() + ", " + nodes[i].id() + "\n");
+                output += (tabs + nodes[i].Content() + "," + nodes[i].id() + "\n");
             }
             /*List<Tree> Roots = new List<Tree>();
             for (int i = 0; i < nodes.Count; i++)
@@ -311,13 +311,71 @@ namespace SignalRChatClient
                 }
             }
         }
+
+        public static void ReadImport(string text, List<string> tree)
+        {
+            tree = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None).ToList<string>();
+            #region test
+            /*
+            string output = "";
+            for (int i = 0; i < textList.Count; i++)
+            {
+                output += textList[i]+"\n";
+            }
+            return output;
+            */
+            #endregion
+ 
+           
+        }
+        public static void SortImport(List<string> text, List<Tree> nodes)
+        {
+            string nContent, nName, nID;
+            for (int i = 0; i < text.Count - 1; i++)
+            {
+                nContent = text[i].Substring(0, text[i].LastIndexOf(",") - 1);
+                nName = nContent.Trim();
+                nID = text[i].Substring(text[i].LastIndexOf(",") + 1);
+                nodes.Add(new Tree(nName, nID));
+                nodes[i].Depth = NumberOfOcc(text[i], "\t");
+                if (NumberOfOcc(text[i], "\t") == 0)
+                {
+                    AddNode(nodes[i], null);
+                }
+                else if ((NumberOfOcc(text[i], "\t")) > (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    AddNode(nodes[i], nodes[i - 1].id());
+
+                }
+                else if ((NumberOfOcc(text[i], "\t")) == (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    AddNode(nodes[i], nodes[i - 1].Parent.id());
+
+
+                }
+                else if ((NumberOfOcc(text[i], "\t")) < (NumberOfOcc(text[i - 1], "\t")))
+                {
+                    int d = NumberOfOcc(text[i], "\t");
+                    int j = nodes.Count - 2;
+                    while (nodes[j].Depth != d)
+                    {
+                        j--;
+                    }
+                    AddNode(nodes[i], nodes[j].Parent.id());
+
+
+
+                }
+            }
+        }
+
         public static string ChatInput(string inputString)
         {
             string outputMessage = "";
             string[] inputArray = new string[4];
             char[] c = new char[] { ' ', ',' };
             inputArray = inputString.Split(c, StringSplitOptions.RemoveEmptyEntries);
-            if (inputArray.Length <= 1 && !inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase) && !inputArray[0].Equals("read", StringComparison.InvariantCultureIgnoreCase))
+            if (inputArray.Length <= 1 && !inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase) && !inputArray[0].Equals("read", StringComparison.InvariantCultureIgnoreCase) && !inputArray[0].Equals("request", StringComparison.InvariantCultureIgnoreCase) && !inputArray[0].Equals("receive", StringComparison.InvariantCultureIgnoreCase))
             {
                 outputMessage = "Nothing to operate.";
             }
@@ -437,10 +495,22 @@ namespace SignalRChatClient
                     outputMessage += e.Message;
                 }
             }
-
+            else if (inputArray[0].Equals("request", StringComparison.InvariantCultureIgnoreCase))
+            {
+                //sends out node text
+                
+                outputMessage += "Receive:"+ReadNodes(Nodes);
+            }
+            else if (inputString.StartsWith("Receive:"))
+            {
+                //sends out node text
+                string txt = inputString.Substring(inputString.LastIndexOf(":") + 1);
+                ReadImport(txt, Text);
+                SortImport(Text, Nodes);
+                outputMessage += "Imported:"+ReadNodes(Nodes);
+            }
             else if (inputArray[0].Equals("exit", StringComparison.InvariantCultureIgnoreCase))
             {
-
 
             }
             else
@@ -448,12 +518,10 @@ namespace SignalRChatClient
                 outputMessage = "Please enter valid command.";
             }
 
-
-
+            LastChange = DateTime.Now;
             return outputMessage;
         }
         #endregion
-
 
         public MainWindow()
         {
@@ -548,11 +616,33 @@ namespace SignalRChatClient
                 this.Dispatcher.Invoke(() =>
                 {
                     var newMessage = $"{user}: {message}";
-                    messagesList.Items.Add(newMessage);
-                    messagesList.Items.Add(ChatInput(message));
-
-                    ParseTreeCommand(message);
-
+                    //figure out code here
+                    if (message.StartsWith("request")){
+                        try
+                        {
+                            connection.InvokeAsync("BroadcastMessage", userTextBox.Text, ChatInput(message));
+                        }
+                        catch(Exception xe)
+                        {
+                            messagesList.Items.Add(xe.Message);
+                        }
+                    }
+                    else if (message.StartsWith("Receive"))
+                    {
+                        try
+                        {
+                            messagesList.Items.Add(ChatInput(message));
+                        }
+                        catch (Exception xe)
+                        {
+                            messagesList.Items.Add(xe.Message);
+                        }
+                    }
+                    else {
+                        
+                        messagesList.Items.Add(newMessage);
+                        messagesList.Items.Add(ChatInput(message));
+                    }
                 });
             });
             #endregion
@@ -561,11 +651,12 @@ namespace SignalRChatClient
             {
                 await connection.StartAsync();
                 messagesList.Items.Add("Connection started");
-                messagesList.Items.Add("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nread \npath fileNamePath \nexit");
+                //messagesList.Items.Add("\n---INPUTS--- \nadd parentID,nameOfNewNode \nremove nodeToRemoveID \nmove nodeToMoveID,newParentID \nget ID \nget name \nget leaves \nget internal \nread \npath fileNamePath \nexit");
                 connectButton.IsEnabled = false;
                 sendButton.IsEnabled = true;
 
                 //Send a message that says "WhatAreYourTreeDates
+                await connection.InvokeAsync("BroadcastMessage", userTextBox.Text, "request");
             }
             catch (Exception ex)
             {
