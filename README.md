@@ -28,7 +28,7 @@ add null, Juliet //adds a new root node
 
 `remove **nodeID**`
 
-This is a command to remove a node from the tree.
+This is a command to remove a node from the tree. Also removes all children of the removed node.
 ```
 remove 7
 ``` 
